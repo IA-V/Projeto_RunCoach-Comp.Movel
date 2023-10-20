@@ -1,6 +1,8 @@
 package com.example.runcoachjava;
 import android.util.Log;
 
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -55,6 +57,22 @@ public class MqttHandler {
     public void subscribe(String topic) {
         try {
             client.subscribe(topic);
+            client.setCallback(new MqttCallback() {
+                @Override
+                public void connectionLost(Throwable cause) {
+                    Log.i("conexão perdida", cause.getMessage());
+                }
+
+                @Override
+                public void messageArrived(String topic, MqttMessage message) throws Exception {
+                    Log.i("mensagem recebida", "Tópico: " + topic + "\nMensagem: " + new String(message.getPayload()));
+                }
+
+                @Override
+                public void deliveryComplete(IMqttDeliveryToken token) {
+                    Log.i("mensagem enviada", token.toString()); // log ou toast
+                }
+            });
             Log.i("subscrição bem sucedida", "Subscrição realizada com sucesso!");
         } catch (MqttException e) {
             Log.i("Erro na subscrição", "Subscrição falhou!");
