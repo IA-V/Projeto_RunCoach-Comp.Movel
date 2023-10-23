@@ -9,4 +9,13 @@ public class Localizacao {
         this.latitude = latitude;
         this.altura = altura;
     }
+
+    @Override
+    public String toString() {
+        return "Localizacao {" +
+                "longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", altura=" + altura +
+                '}';
+    }
 }

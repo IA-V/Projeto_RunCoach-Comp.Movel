@@ -12,4 +12,13 @@ public class Usuario {
         this.idade = idade;
 
     }
+
+    public void cadastrarUsuario(MqttHandler client) {
+        client.publish("Novo Usuário", this.toString());
+    }
+
+    @Override
+    public String toString() {
+        return "Nome: " + this.nome + "\nPeso: " + this.peso + "\nAltura: " + this.altura + "\nIdade: " + this.idade;
+    }
 }
