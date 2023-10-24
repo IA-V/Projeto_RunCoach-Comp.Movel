@@ -45,16 +45,17 @@ public class MainActivity extends AppCompatActivity {
         mqttClient = new MqttHandler();
         mqttClient.connect(BROKER_URL, CLIENT_ID);
 
-        Toast.makeText(this, "Publicando tópico: " + "Tópico de Teste", Toast.LENGTH_SHORT).show();
-        mqttClient.publish("Tópico de Teste", "este tópico é para teste");
-        Toast.makeText(this, "Subscrevendo-se ao tópico: " + "Tópico de Teste", Toast.LENGTH_SHORT).show();
-        mqttClient.subscribe("Tópico de Teste");
+        /* Toast.makeText(this, "Publicando tópico: " + "Tópico de Teste", Toast.LENGTH_SHORT).show();
+        mqttClient.publish("Tópico de Teste", "este tópico é para teste"); */
+        /* Toast.makeText(this, "Subscrevendo-se ao tópico: " + "runcoach/data", Toast.LENGTH_SHORT).show();
+        mqttClient.subscribe("runcoach/data"); */
 
-        Box<Usuario> usuario = new Box<Usuario>(new Usuario("Fulano", 80.5, 1.85, 30));
+        // Usuário a ser cadastrado
+        Box<Usuario> usuarioBox = new Box<Usuario>(new Usuario("Fulano", 80.5, 1.85, 30));
 
-        Localizacao local1 = new Localizacao(41.7810, 60.0054, 15.7800);
-        Localizacao local2 = new Localizacao(41.7810, 60.0054, 15.7800);
-        Localizacao local3 = new Localizacao(41.7810, 60.0054, 15.7800);
+        Localizacao local1 = new Localizacao(41.7810, 60.0054);
+        Localizacao local2 = new Localizacao(41.7810, 60.0054);
+        Localizacao local3 = new Localizacao(41.7810, 60.0054);
 
         List<Localizacao> pontosPercurso = new ArrayList<>();
 
@@ -62,10 +63,18 @@ public class MainActivity extends AppCompatActivity {
         pontosPercurso.add(local2);
         pontosPercurso.add(local3);
 
-        Box<Treino> treino = new Box<Treino>(new Treino(2530.5, 30, 25, pontosPercurso));
+        // Dados de um treino cadastrado virão do BD | Dados de um treino a ser cadastrado serão adquiridos da UI (instanciação do obj será feita onde quer que os dados sejam adquiridos)
+        Treino treino = new Treino(2530.5, 30, 25, pontosPercurso);
 
-        this.cadastrar(usuario);
-        this.cadastrar(treino);
+        // Treino a ser cadastrado
+        Box<Treino> treinoBox = new Box<Treino>(treino);
+
+        // this.cadastrarModelo(usuarioBox); // Exemplo
+        // this.cadastrarModelo(treinoBox); // Exemplo
+
+        List<String[]> dadosTreino = treino.iniciarTreino();
+        // Exibir opção de subir dados ao servidor ou não (chamada ao método provavelmente será feito onde a UI é implementada, então esta parte do código não ficará aqui na Main)
+        this.cadastrarDadosTreino(dadosTreino);// Se sim
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -121,7 +130,14 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    private void cadastrar(Box<?> boxObj) {
-        mqttClient.publish("Novo Cadastro", boxObj.toString());
+    private void cadastrarModelo(Box<?> boxObj) {
+        mqttClient.publish("runcoach/data", boxObj.toString());
+    }
+
+    private void cadastrarDadosTreino(List<String[]> dados) {
+        for (String[] stringDados :
+             dados) {
+            mqttClient.publish("runcoach/data", stringDados[0]+","+stringDados[1]+","+stringDados[2]+","+stringDados[3]);
+        }
     }
 }

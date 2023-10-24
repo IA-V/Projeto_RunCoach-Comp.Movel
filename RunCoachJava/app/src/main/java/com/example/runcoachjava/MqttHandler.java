@@ -70,7 +70,11 @@ public class MqttHandler {
 
                 @Override
                 public void deliveryComplete(IMqttDeliveryToken token) {
-                    Log.i("mensagem enviada", token.toString()); // log ou toast
+                    try {
+                        Log.i("mensagem enviada", new String(token.getMessage().getPayload())); // log ou toast
+                    } catch (MqttException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             });
             Log.i("subscrição bem sucedida", "Subscrição realizada com sucesso!");

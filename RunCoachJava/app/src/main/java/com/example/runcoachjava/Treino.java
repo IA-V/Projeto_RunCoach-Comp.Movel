@@ -1,6 +1,7 @@
 package com.example.runcoachjava;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Treino {
@@ -18,6 +19,15 @@ public class Treino {
 
     public void cadastrarTreino(MqttHandler client) {
         client.publish("Novo Treino", this.toString());
+    }
+
+    public List<String[]> iniciarTreino() {
+        // Pega os dados de localização, batimentos e timestamp durante o treino a cada intervalo de tempo (simulação de dataset pode entrar aqui)
+        List<String[]> dados = new ArrayList<String[]>();
+        dados.add(new String[]{"56.7281", "47.0600", "123", "20231024150784"});
+        // ... outros pepinos a resolver
+        // Localização atual é igual à última localização do treino (treino encerra aqui)
+        return dados;
     }
 
     @Override
