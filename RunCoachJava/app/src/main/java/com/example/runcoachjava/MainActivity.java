@@ -19,6 +19,8 @@ import com.example.runcoachjava.databinding.ActivityMainBinding;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import java.io.InputStream;
 import java.time.Duration;
 
 import com.opencsv.CSVReader;
@@ -72,7 +74,9 @@ public class MainActivity extends AppCompatActivity {
         // this.cadastrarModelo(usuarioBox); // Exemplo
         // this.cadastrarModelo(treinoBox); // Exemplo
 
-        List<String[]> dadosTreino = treino.iniciarTreino();
+        InputStream is = getResources().openRawResource(R.raw.dataset_runcoach);
+
+        List<String> dadosTreino = treino.iniciarTreino(is);
         // Exibir opção de subir dados ao servidor ou não (chamada ao método provavelmente será feito onde a UI é implementada, então esta parte do código não ficará aqui na Main)
         this.cadastrarDadosTreino(dadosTreino);// Se sim
 
@@ -134,10 +138,10 @@ public class MainActivity extends AppCompatActivity {
         mqttClient.publish("runcoach/data", boxObj.toString());
     }
 
-    private void cadastrarDadosTreino(List<String[]> dados) {
-        for (String[] stringDados :
+    private void cadastrarDadosTreino(List<String> dados) {
+        for (String stringDados :
              dados) {
-            mqttClient.publish("runcoach/data", stringDados[0]+","+stringDados[1]+","+stringDados[2]+","+stringDados[3]);
+            mqttClient.publish("runcoach/data", stringDados);
         }
     }
 }
