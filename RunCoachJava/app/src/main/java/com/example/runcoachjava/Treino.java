@@ -18,11 +18,11 @@ import java.io.FileReader;
 
 public class Treino {
     // Informaçoes sobre o percurso
-    private double distancia;
+    private int distancia;
     private double tempoPlan;
     private int qtdPontosPercurso;
     private List<Localizacao> pontosPercurso;
-    public Treino(double distancia, double tempoPlan, int qtdPontosPercurso, List<Localizacao> pontosPercurso) {
+    public Treino(int distancia, double tempoPlan, int qtdPontosPercurso, List<Localizacao> pontosPercurso) {
         this.distancia = distancia;
         this.tempoPlan = tempoPlan;
         this.qtdPontosPercurso = qtdPontosPercurso;
@@ -64,12 +64,17 @@ public class Treino {
 
     @Override
     public String toString() {
-        String localizacoes = "";
+        return this.distancia + "," + this.tempoPlan + "," + this.qtdPontosPercurso;
+    }
+
+    public List<String> getLocalizacoes() {
+        List<String> localizacoes = new ArrayList<String>();
         int count = 1;
         for (Localizacao pontoPercurso :
-             this.pontosPercurso) {
-            localizacoes += "\n" + Integer.toString(count) + " - " + pontoPercurso.toString();
+                this.pontosPercurso) {
+            localizacoes.add(pontoPercurso.toString());
         }
-        return "Distância: " + this.distancia + "\nTempo planejado: " + this.tempoPlan + "\nQtd. de pontos de percurso: " + this.qtdPontosPercurso + "\nPontos do percurso: " + localizacoes;
+
+        return localizacoes;
     }
 }

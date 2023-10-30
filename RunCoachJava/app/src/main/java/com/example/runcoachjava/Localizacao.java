@@ -12,8 +12,6 @@ public class Localizacao {
 
     @Override
     public String toString() {
-        return "longitude=" + longitude +
-                ", latitude=" + latitude +
-                '}';
+        return latitude + "," + longitude;
     }
 }

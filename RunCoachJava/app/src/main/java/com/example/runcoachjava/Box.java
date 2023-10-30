@@ -10,4 +10,8 @@ public class Box<T> {
     public String toString() {
         return this.boxObj.toString();
     }
+
+    public T getBoxObj() {
+        return this.boxObj;
+    }
 }

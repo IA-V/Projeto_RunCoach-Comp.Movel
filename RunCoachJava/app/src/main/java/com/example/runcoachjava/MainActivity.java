@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         mqttClient.subscribe("runcoach/data"); */
 
         // Usuário a ser cadastrado
-        Box<Usuario> usuarioBox = new Box<Usuario>(new Usuario("Fulano", 80.5, 1.85, 30));
+        Box<Usuario> usuarioBox = new Box<Usuario>(new Usuario("Fulano", 80.5, 1.85, "1993-05-26"));
 
         Localizacao local1 = new Localizacao(41.7810, 60.0054);
         Localizacao local2 = new Localizacao(41.7810, 60.0054);
@@ -66,13 +66,13 @@ public class MainActivity extends AppCompatActivity {
         pontosPercurso.add(local3);
 
         // Dados de um treino cadastrado virão do BD | Dados de um treino a ser cadastrado serão adquiridos da UI (instanciação do obj será feita onde quer que os dados sejam adquiridos)
-        Treino treino = new Treino(2530.5, 30, 25, pontosPercurso);
+        Treino treino = new Treino(2530, 30, 25, pontosPercurso);
 
         // Treino a ser cadastrado
         Box<Treino> treinoBox = new Box<Treino>(treino);
 
-        // this.cadastrarModelo(usuarioBox); // Exemplo
-        // this.cadastrarModelo(treinoBox); // Exemplo
+        this.cadastrarModelo(usuarioBox, "runcoach/usuario"); // Exemplo
+        this.cadastrarModelo(treinoBox, "runcoach/treino"); // Exemplo
 
         InputStream is = getResources().openRawResource(R.raw.dataset_runcoach);
 
@@ -134,8 +134,18 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    private void cadastrarModelo(Box<?> boxObj) {
-        mqttClient.publish("runcoach/data", boxObj.toString());
+    private void cadastrarModelo(Box<?> boxObj, String topic) {
+        mqttClient.publish(topic, boxObj.toString());
+
+        if(topic.equals("runcoach/treino")) {
+            Treino treino = (Treino) boxObj.getBoxObj();
+
+            for (String localizacao :
+                 treino.getLocalizacoes()) {
+                mqttClient.publish(topic, localizacao);
+            }
+        }
+
     }
 
     private void cadastrarDadosTreino(List<String> dados) {
